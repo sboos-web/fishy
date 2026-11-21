@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Local Fishing Plan</title>
+<style>
+:root{color-scheme:dark;--bg:#101719;--panel:#182326;--line:#2b3b3e;--text:#e9f0ed;--muted:#a8b8b3;--accent:#a8d8c3;--warn:#f0c987}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:850px;margin:0 auto;padding:34px 20px 56px}header{padding-bottom:20px;border-bottom:1px solid var(--line);margin-bottom:22px}
+h1{font-size:clamp(27px,5vw,38px);line-height:1.1;margin:0 0 8px;letter-spacing:-.04em}
+h2{font-size:17px;margin:0 0 12px;color:var(--accent)}h3{font-size:16px;margin:0 0 6px}
+p{margin:6px 0;color:var(--muted)}.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--accent);font-weight:700}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;color:var(--muted);font-size:13px;margin-top:12px}
+section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;margin:14px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.metric{padding:12px;background:#111c1f;border:1px solid var(--line);border-radius:9px}
+.metric b{display:block;font-size:22px;color:var(--text);line-height:1.25}.metric span{font-size:12px;color:var(--muted)}
+.fish{display:grid;grid-template-columns:132px minmax(0,1fr);gap:14px;align-items:stretch;padding:14px 0;border-top:1px solid var(--line)}.fish:first-of-type{border-top:0;padding-top:0}.fish-art{display:block;align-self:stretch;min-height:132px;overflow:hidden;background:#111c1f;border:1px solid var(--line);border-radius:9px;padding:0}.fish-art img{display:block;width:100%;height:100%;min-height:132px;object-fit:cover;object-position:center; border-radius:8px}.fish-copy{min-width:0}
+.tag{display:inline-block;font-size:11px;color:#0e2019;background:var(--accent);border-radius:4px;padding:2px 7px;margin-left:7px;font-weight:700}
+dl{display:grid;grid-template-columns:100px 1fr;gap:5px 12px;margin:9px 0 0}dt{color:var(--muted)}dd{margin:0}
+ul{margin:8px 0 0;padding-left:19px;color:var(--muted)}li{margin:4px 0}
+a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}button{background:var(--accent);color:#102019;border:0;border-radius:7px;padding:9px 13px;font-weight:700;cursor:pointer}
+.small{font-size:12px}.status{color:var(--warn)}.foot{font-size:12px;color:var(--muted);margin-top:18px}
+@media(max-width:520px){main{padding:24px 14px 40px}section{padding:15px}dl{grid-template-columns:85px 1fr}.fish{grid-template-columns:92px minmax(0,1fr);gap:10px}.fish-art{min-height:118px}.fish-art img{min-height:118px}}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <div class="eyebrow">A practical local bite forecast</div>
+  <h1>Your fishing plan</h1>
+  <p id="place">Finding your location…</p>
+  <div class="meta"><span id="updated">Loading local conditions…</span><span id="season">Late fall pattern</span></div>
+</header>
+
+<section>
+  <h2>Overall fishing potential</h2>
+  <div class="grid"><div class="metric"><b id="qualityScore">— / 100</b><span id="qualityLabel">Regional freshwater potential</span></div><div class="metric"><b id="todayScore">— / 100</b><span>Today's fishability estimate</span></div></div>
+  <p id="qualityReason">Regional score compares freshwater habitat, species diversity and season length. It is an illustrative index, not a scientific measurement.</p>
+</section>
+
+<section>
+  <h2>Today's read</h2>
+  <div class="grid">
+    <div class="metric"><b id="nowTemp">—</b><span>Air temperature</span></div>
+    <div class="metric"><b id="wind">—</b><span>Wind</span></div>
+    <div class="metric"><b id="todayRange">—</b><span>Today's high / low</span></div>
+    <div class="metric"><b id="rain">—</b><span>Precipitation outlook</span></div>
+  </div>
+  <p id="weatherSummary" style="margin-top:12px">Loading current, recent and upcoming weather…</p>
+</section>
+
+<section>
+  <h2>Top three species to target</h2>
+  <div id="fishList">
+    <p>Building recommendations from your location and the seasonal pattern…</p>
+  </div>
+</section>
+
+<section>
+  <h2>Best time to fish</h2>
+  <div class="grid">
+    <div class="metric"><b id="bestWindow">Dawn / late afternoon</b><span>Primary window</span></div>
+    <div class="metric"><b id="backupWindow">Midday warm-up</b><span>Secondary window</span></div>
+  </div>
+  <p id="timingReason">Low light often helps trout; warming afternoon hours can improve shallow-water activity in late fall.</p>
+</section>
+
+<section>
+  <h2>Weather trend: past 2 days + next 2 days</h2>
+  <div id="trend"><p>Loading weather history and forecast…</p></div>
+</section>
+
+<section>
+  <h2>Where to start</h2>
+  <div id="locations">
+    <ul>
+      <li>Prioritize protected shoreline, bay channels and tributary mouths when the open lake is rough.</li>
+      <li>For stream trout, focus on deeper holding pools and seams rather than fast, shallow riffles.</li>
+      <li>For perch, locate a school first; keep presentations close to bottom but above snags.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>Local reports & useful references</h2>
+  <ul id="sources">
+    <li><a href="https://www.dec.ny.gov/things-to-do/freshwater-fishing" target="_blank" rel="noopener">New York State DEC freshwater fishing</a> — regulations, access and species information.</li>
+    <li><a href="https://open-meteo.com/en/docs" target="_blank" rel="noopener">Open-Meteo API documentation</a> — hourly, daily and historical weather.</li>
+    <li><a href="https://www.waynecountytourism.com/2026/11/17/fishing-update/" target="_blank" rel="noopener">Wayne County fishing update (Nov. 17, 2026)</a> — nearby Lake Ontario pier, stream and bay observations.</li>
+    <li><a href="https://www.weather.gov/documentation/services-web-api" target="_blank" rel="noopener">NOAA / National Weather Service API</a> — latest nearby station observations.</li>
+    <li><a href="https://api.met.no/weatherapi/locationforecast/2.0/documentation" target="_blank" rel="noopener">MET Norway Locationforecast</a> — independent global forecast model.</li>
+    <li><a href="https://lakeamericafishingreport.com/" target="_blank" rel="noopener">Lake Ontario live conditions</a> — buoy temperatures, wind and wave observations.</li>
+  </ul>
+  <p class="small">Local reports are regional clues, not a guarantee that fish are present at your exact spot. Confirm access and current regulations before fishing.</p>
+</section>
+
+<p class="foot">The regional fishing score is an illustrative comparison, not a scientific measurement. Fish activity and depth are estimates; verify water conditions on arrival.</p>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const fmt = (n, unit='°F') => n == null ? '—' : `${Math.round(n)}${unit}`;
+const dateLabel = s => new Date(s+'T12:00:00').toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});
+function compass(deg){return ['N','NE','E','SE','S','SW','W','NW'][Math.round(deg/45)%8]}
+function weatherText(code){
+ if(code===0)return 'clear'; if([1,2].includes(code))return 'partly cloudy'; if(code===3)return 'overcast';
+ if([45,48].includes(code))return 'foggy'; if([51,53,55,61,63,65,80,81,82].includes(code))return 'wet / rainy';
+ if([71,73,75,77,85,86].includes(code))return 'snowy'; if([95,96,99].includes(code))return 'thunderstorms'; return 'mixed';
+}
+function fishPhoto(type){
+ const photos={
+  trout:'https://www.ifiske.se/_next/image?q=50&url=%2Fimg%2Fcatches%2F68%2Fcatch_c0bd0fcf-432d-4f0c-a23f-8d41b70ea6ed.jpeg&w=3840',
+  steelhead:'https://www.fws.gov/sites/default/files/2021-08/biologist-capturing-steelhead-methow-river-winthrop-national-fish-hatchery-michael-humling.jpg',
+  perch:'https://comptoirdespecheurs.com/images/photo_publication/big_20251012153955_VX.jpeg',
+  walleye:'https://buffalorigs.com/cdn/shop/files/B29664E0-88EB-4ABE-B1C0-71015F9204B4.jpg?v=1696908556&width=1946',
+  bass:'https://d2y21t85kjqjvu.cloudfront.net/result/7020646/7f25f8cb-c44e-4ad8-87a5-4bdd43b0dccc.jpg'
+ };
+ const key=type==='steelhead'?'steelhead':type;
+ return `<img src="${photos[key]||photos.bass}" alt="${type} lying vertically, head at top and tail at bottom" loading="lazy" referrerpolicy="no-referrer">`;
+}
+function fishArt(type){
+ const shapes={
+  walleye:{body:'M25 51 C48 19 116 17 164 49 L190 52 L164 58 C115 83 52 81 25 51Z',tail:'M25 51 L4 26 L9 51 L4 76Z',fin:'M68 29 Q95 4 124 28 M78 70 Q104 91 129 70',color:'#a8a77c',marks:'M63 27 L55 67 M87 21 L80 75 M111 23 L106 72'},
+  perch:{body:'M27 51 C48 18 119 15 162 50 C120 83 53 83 27 51Z',tail:'M27 51 L5 26 L10 51 L5 76Z',fin:'M58 28 Q90 2 126 27 Q92 20 58 28 M72 72 Q98 94 128 71',color:'#c7a45c',marks:'M67 27 L58 69 M87 22 L78 76 M108 24 L101 76 M128 32 L125 68'},
+  bass:{body:'M25 51 C43 18 115 12 163 49 C123 83 54 82 25 51Z',tail:'M25 51 L4 24 L8 51 L4 78Z',fin:'M65 27 Q91 4 119 27 Q91 22 65 27 M72 70 Q95 93 122 70',color:'#91b77b',marks:'M42 43 Q88 28 144 48 M45 52 Q91 39 145 54'},
+  trout:{body:'M23 51 C48 24 117 19 166 50 C119 80 52 78 23 51Z',tail:'M23 51 L4 25 L9 51 L4 77Z',fin:'M75 30 Q96 8 120 29 M77 68 Q102 89 126 69',color:'#b18d78',marks:'M45 45 Q93 35 148 49 M45 56 Q95 65 148 54'},
+  pike:{body:'M24 50 C59 31 116 31 168 47 L191 54 L166 60 C111 73 59 68 24 50Z',tail:'M25 50 L5 27 L10 50 L5 73Z',fin:'M76 35 Q98 17 120 35 M83 64 Q105 83 127 63',color:'#9aa879',marks:'M54 42 l8 8 m8 -10 l8 10 m8 -10 l8 10 m8 -10 l8 10 m8 -8 l8 8'}
+ };
+ const f=shapes[type]||shapes.bass;
+ return `<svg viewBox="0 0 200 100" role="img" aria-label="${type} fish illustration" xmlns="http://www.w3.org/2000/svg"><path d="${f.tail}" fill="${f.color}" stroke="#d7dfc9" stroke-width="2"/><path d="${f.body}" fill="${f.color}" stroke="#d7dfc9" stroke-width="2"/><path d="${f.fin}" fill="${f.color}" stroke="#d7dfc9" stroke-width="2" stroke-linejoin="round"/><path d="${f.marks}" fill="none" stroke="#43584b" stroke-width="3" stroke-linecap="round" opacity=".8"/><circle cx="150" cy="43" r="3.5" fill="#101719"/><circle cx="151" cy="42" r="1" fill="#fff"/></svg>`;
+}
+function setQuality(lat,lon,wind){
+ let score=52,label='Moderate regional potential',reason='Broad location estimate; nearby water access and habitat have not yet been verified.';
+ if(lat>40.5&&lat<45.8&&lon>-80.5&&lon<-73){score=78;label='Strong freshwater region';reason='Central and Upstate New York offer a dense mix of lakes, reservoirs, rivers and Great Lakes tributary fisheries, with a broad freshwater species mix.';}
+ else if(lat>-5&&lat<10&&lon>-75&&lon<-45){score=94;label='Exceptional tropical freshwater potential';reason='The Amazon basin has extraordinary freshwater habitat and fish diversity; this is a broad ecological comparison, not a catch-rate or access guarantee.';}
+ else if(lat>15&&lat<32&&lon>15&&lon<40){score=8;label='Very limited freshwater potential';reason='The Sahara benchmark represents sparse surface freshwater and limited general freshwater fishing opportunity; local reservoirs and oases can differ.';}
+ else if(lat>25&&lat<50&&lon>-100&&lon<-65){score=70;label='Good freshwater opportunity';reason='This broad North American region has useful freshwater opportunities, but exact nearby waters and public access have not been verified.';}
+ $('qualityScore').textContent=`${score} / 100`;$('qualityLabel').textContent=label;
+ $('qualityReason').textContent=`${reason} Scale anchors: Sahara Desert ≈ 0; Amazon basin ≈ 100. This is an illustrative, non-scientific regional index.`;
+ $('todayScore').textContent=`${Math.max(10,Math.min(95,Math.round(70-Math.max(0,wind-8)*1.8)))} / 100`;
+}
+function renderFish(kind, waterTemp, wind, rainTrend){
+ let fish=[];
+ if(kind==='lakeOntario'){
+  fish=[
+   {name:'Brown trout',art:'trout',tag:'Best seasonal fit',where:'Shallow shoreline, pier edges and creek mouths; often 2–10 ft when staging. In tributaries, work deeper pools and current seams.',lure:'3/8–1 oz bright spoons (Little Cleo, Kastmaster); in streams, drift beads or egg sacs under a float.',time:'First light and the last 2 hours before dark; cloudy periods can extend the bite.',note:'Late-fall browns often stage near tributaries and accessible shoreline.'},
+   {name:'Steelhead',art:'steelhead',tag:'Strong seasonal option',where:'Tributaries: deeper pools, tailouts and current seams; lake staging fish can be close to shore near creek mouths.',lure:'Egg sacs or beads under a float; small pink, orange or white jigs. Downsize in clear, low water.',time:'Dawn through mid-morning, then late afternoon; prioritize stable flows and manageable clarity.',note:'Fall steelhead enter tributaries; recent rain and flow changes can reposition fish.'},
+   {name:'Yellow perch',art:'perch',tag:'Reliable bay option',where:'Schools near bottom in 10–25 ft; check basin edges and channel breaks, then adjust to sonar marks.',lure:'Live minnows or worms on a small perch rig; 1.5–2 in grubs or small blade baits just above bottom.',time:'Late morning through afternoon, especially as protected bays warm.',note:'Search until you find a school; perch often group tightly in fall.'}
+  ];
+ } else {
+  fish=[
+   {name:'Walleye',art:'walleye',tag:'Top late-fall target',where:'Rocky points, shoals, channel edges and steep breaks; usually close to bottom, with shallow evening movement possible.',lure:'1/4–3/8 oz jig with a 3–4 in paddletail or minnow; blade bait over deeper structure.',time:'Last 90 minutes of daylight into the first hour after dark; cloudy afternoons are a backup.',note:'A strong cold-season target in Central New York lakes and reservoirs. Find bait and hard-bottom structure first.'},
+   {name:'Yellow perch',art:'perch',tag:'Reliable schooling fish',where:'Schools over deeper flats and basin edges, generally in the lower few feet; start around 15–35 ft where available.',lure:'Live minnow on a small hook, 1/16–1/8 oz jig with a 1.5–2 in grub, or a small blade bait just above bottom.',time:'Late morning through mid-afternoon; move until you locate a school, then stay on it.',note:'A dependable late-fall option when schools are located. A depth map or sonar helps considerably.'},
+   {name:'Smallmouth bass',art:'bass',tag:'Structure-oriented',where:'Deep rock, points, steep breaks and submerged humps; near bottom or suspended above deep structure.',lure:'3–4 in finesse minnow on a 1/8–1/4 oz jighead, drop-shot minnow, or football jig dragged slowly.',time:'Late morning to mid-afternoon on stable, brighter days; use slow presentations and long pauses.',note:'Cold-water smallmouth group around offshore structure; expect a slower bite than in warm months.'}
+  ];
+ }
+ if(wind>=15)fish[0].note+=' Strong wind can make exposed shoreline unsafe; favor protected water.';
+ if(rainTrend)fish[1].note+=' Recent or incoming rain may change tributary flow and clarity; check conditions before committing.';
+ if(waterTemp!=null&&waterTemp<45)fish[2].where='Favor deeper, stable water and bottom transitions; slow down and keep the bait close to the fish.';
+ $('fishList').innerHTML=fish.map((f,i)=>`<div class="fish"><div class="fish-art">${fishPhoto(f.art)}</div><div class="fish-copy"><h3>${i+1}. ${f.name}<span class="tag">${f.tag}</span></h3><dl><dt>Where</dt><dd>${f.where}</dd><dt>Best lures</dt><dd>${f.lure}</dd><dt>Best time</dt><dd>${f.time}</dd></dl><p>${f.note}</p></div></div>`).join('');
+}
+async function getNwsTemperature(lat,lon){
+ const headers={Accept:'application/geo+json'};
+ const point=await fetch(`https://api.weather.gov/points/${lat},${lon}`,{headers});if(!point.ok)throw new Error('NWS point lookup failed');
+ const meta=await point.json();const sr=await fetch(meta.properties.observationStations,{headers});if(!sr.ok)throw new Error('NWS station lookup failed');
+ const stations=await sr.json();let valid=[];
+ for(const station of (stations.features||[]).slice(0,5))try{
+  const id=station.properties.stationIdentifier;const r=await fetch(`https://api.weather.gov/stations/${id}/observations/latest`,{headers});if(!r.ok)continue;
+  const o=(await r.json()).properties,c=o.temperature?.value,age=(Date.now()-Date.parse(o.timestamp))/60000;
+  if(Number.isFinite(c)&&Number.isFinite(age)&&age>=-10&&age<=90)valid.push({name:`NOAA/NWS ${id}`,temp:c*9/5+32,age});
+ }catch(e){}
+ if(!valid.length)throw new Error('No NWS observation within 90 minutes');valid.sort((a,b)=>a.age-b.age);return valid[0];
+}
+async function getMetNorwayTemperature(lat,lon){
+ const r=await fetch(`https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=${lat}&lon=${lon}`,{headers:{Accept:'application/json'}});if(!r.ok)throw new Error('MET Norway request failed');
+ const d=await r.json(),item=d.properties?.timeseries?.[0],c=item?.data?.instant?.details?.air_temperature;
+ if(!Number.isFinite(c))throw new Error('MET Norway temperature unavailable');return {name:'MET Norway',temp:c*9/5+32,validTime:item.time};
+}
+async function getTemperatureConsensus(lat,lon,openMeteoTemp){
+ const results=await Promise.allSettled([getNwsTemperature(lat,lon),getMetNorwayTemperature(lat,lon)]);
+ const readings=[{name:'Open-Meteo',temp:openMeteoTemp}];for(const r of results)if(r.status==='fulfilled')readings.push(r.value);
+ const average=readings.reduce((a,r)=>a+r.temp,0)/readings.length,spread=Math.max(...readings.map(r=>r.temp))-Math.min(...readings.map(r=>r.temp));
+ $('nowTemp').textContent=fmt(average);
+ return {average,readings,spread};
+}
+async function load(lat,lon){
+ const tz='auto';
+ const url=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&timezone=${tz}&temperature_unit=fahrenheit&wind_speed_unit=mph&forecast_days=4&past_days=2&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,rain,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m&hourly=temperature_2m,precipitation_probability,precipitation,wind_speed_10m,wind_direction_10m,cloud_cover,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max,sunrise,sunset`;
+ const r=await fetch(url); if(!r.ok)throw new Error('Weather service unavailable'); const d=await r.json();
+ const c=d.current, days=d.daily, h=d.hourly;
+ const consensus=await getTemperatureConsensus(lat,lon,c.temperature_2m);
+ setQuality(lat,lon,c.wind_speed_10m);
+ $('wind').textContent=`${Math.round(c.wind_speed_10m)} mph ${compass(c.wind_direction_10m)}`;
+ $('todayRange').textContent=`${fmt(days.temperature_2m_max[2])} / ${fmt(days.temperature_2m_min[2])}`;
+ $('rain').textContent=`${days.precipitation_probability_max[2] ?? '—'}% chance`;
+ $('updated').textContent=`${new Date().toLocaleString()} · live weather`;
+ const nearLake=lat>42.3 && lat<44.5 && lon>-78.5 && lon<-76.45;
+ $('place').textContent=`${lat.toFixed(3)}, ${lon.toFixed(3)} · ${nearLake?'Great Lakes / New York region':'Your current area'}`;
+ $('weatherSummary').textContent=`Currently ${weatherText(c.weather_code)}. Air temperature is ${fmt(consensus.average)}, with ${Math.round(c.wind_speed_10m)} mph ${compass(c.wind_direction_10m)} wind. Today's forecast reaches ${fmt(days.temperature_2m_max[2])}, with a ${days.precipitation_probability_max[2] ?? 'low'}% maximum precipitation chance. Air temperature is not a substitute for water temperature.`;
+ const rainRecent=h.precipitation.slice(0,48).reduce((a,b)=>a+(b||0),0);
+ const rainNext=h.precipitation.slice(48,96).reduce((a,b)=>a+(b||0),0);
+ const windNext=Math.max(...h.wind_speed_10m.slice(48,96));
+ const trendStart=0, trendEnd=Math.min(days.time.length,5);
+ $('trend').innerHTML=`<div class="grid">${days.time.slice(trendStart,trendEnd).map((day,i)=>`<div class="metric"><b>${fmt(days.temperature_2m_max[i])} / ${fmt(days.temperature_2m_min[i])}</b><span>${dateLabel(day)} · ${weatherText(days.weather_code[i])}<br>Rain chance up to ${days.precipitation_probability_max[i] ?? '—'}%</span></div>`).join('')}</div><p style="margin-top:12px">Previous 48 hours: ${rainRecent.toFixed(1)} mm precipitation. Next 48 hours: ${rainNext.toFixed(1)} mm forecast precipitation; peak forecast wind ${Math.round(windNext)} mph. ${rainRecent>5?'Recent rainfall may have raised tributary flow or clouded water.':'Little recent rain is indicated; tributary flows may remain relatively low.'} ${rainNext>5?'Rain is forecast soon, so expect possible changes in stream clarity and flow.':'No major rain signal in the next 48 hours.'}</p>`;
+ const rainTrend=rainRecent>5||rainNext>5;
+ renderFish(nearLake?'lakeOntario':'other',null,c.wind_speed_10m,rainTrend);
+ if(nearLake){
+  $('locations').innerHTML=`<ul><li><b>Lake Ontario shoreline / pier:</b> cast spoons along safe, accessible edges; avoid exposed points when waves or wind build.</li><li><b>Fair Haven Bay and protected channels:</b> search perch schools over deeper flats and channel edges; use live bait or small plastics.</li><li><b>Nearby tributary mouths and streams:</b> check current flow and clarity; fish pools and seams for trout rather than fast riffles.</li></ul><p class="small">The location match is regional. The exact best access point depends on your position, access rules and lake conditions.</p>`;
+ } else {
+  $('locations').innerHTML=`<ul><li>Start with protected shorelines, points, creek mouths and weed edges in the nearest fishable water.</li><li>For trout, target current seams and deeper pools; for panfish, search basin edges and bottom transitions.</li><li>Use the local reports links below to validate species and access for your exact waterbody.</li></ul>`;
+ }
+}
+function fail(err){$('place').textContent='Location unavailable';$('weatherSummary').textContent=err.message||'Allow location access and reload to generate a local plan.';$('fishList').innerHTML='<p>Recommendations require your location. Enable location permission for this page and refresh.</p>';$('trend').innerHTML='<p>Weather history and forecast could not be loaded.</p>';}
+if(!navigator.geolocation){fail(new Error('This browser does not support location access.'));}else{
+ navigator.geolocation.getCurrentPosition(pos=>load(pos.coords.latitude,pos.coords.longitude).catch(fail),()=>fail(new Error('Location permission was denied. Allow location access and refresh.')),{enableHighAccuracy:true,timeout:12000,maximumAge:300000});
+}
+</script>
+</body>
+</html>
